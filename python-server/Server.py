@@ -39,8 +39,6 @@ def datos() -> List[Dict]:
                 vals = redis.lrange(key, 0, -1)
             if type == "set":
                 vals = redis. smembers(key)
-            except Exception as e:
-                print(e)
         return valores
 
 # FUNCION de tipo get para mostrar los datos de la BD
