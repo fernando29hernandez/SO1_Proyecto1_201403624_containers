@@ -1,0 +1,29 @@
+package main
+
+import (
+"fmt"	
+	"net/http"
+"github.com/gorilla/mux"
+    redis "gopkg.in/redis.v4"
+)
+
+func mem(response http.ResponseWriter, request *http.Request) {
+
+	http.ServeFile(response, request, "memoria.html")
+}
+
+var router = mux.NewRouter()
+func main() {
+
+    client := redis.NewClient(&redis.Options{
+        Addr:     "redis:6379",
+        Password: "", // no	 password set
+        DB:       0,  // use default DB
+    })
+
+    pong, err := client.Ping().Result()
+    fmt.Println(pong, err)
+    http.Handle("/",memoria)
+    fmt.Println("Servidor corriendo en http:localhost:80")
+    http.ListenAndServe(":80", nil)
+}

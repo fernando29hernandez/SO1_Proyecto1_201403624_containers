@@ -1,0 +1,56 @@
+package main
+
+import (
+	"fmt"
+	"net/http"
+"github.com/gorilla/mux"
+	"github.com/go-redis/redis"
+"time"
+)
+
+decoder := json.NewDecoder(request.Body)
+
+	var t test_struct
+	err := decoder.Decode(&t)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(t.Test)
+
+func mem(response http.ResponseWriter, request *http.Request) {
+
+	http.ServeFile(response, request, "memoria.html")
+}
+
+func insertardato(w http.ResponseWriter, r *http.Request)
+{
+t := time.Now()
+	fecha := fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d",
+		t.Year(), t.Month(), t.Day(),
+		t.Hour(), t.Minute(), t.Second())
+
+	fmt.Println("La fecha actual es =>", fecha)
+
+
+}
+var router = mux.NewRouter()
+
+func main() {
+
+    client := redis.NewClient(&redis.Options{
+        Addr:     "redis:6379",
+        Password: "", // no password set
+        DB:       0,  // use default DB
+    })
+
+    pong, err := client.Ping().Result()
+
+    fmt.Println(pong, err)
+router.HandleFunc("/dato", insertardato).Methods("POST")
+    http.HandleFunc("/mem",mem)
+   http.Handle("/", router)
+	fmt.Println("Servidor corriendo en http://localhost:8081/")
+	http.ListenAndServe(":80", nil)
+}
