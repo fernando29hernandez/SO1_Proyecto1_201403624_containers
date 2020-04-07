@@ -45,6 +45,7 @@ def index():
     return render_template("index.html", results=datos())
 
 @app.route('/memoria')
+@crossdomain(origin='*',headers=['access-control-allow-origin','Content-Type'])
 def memoria():
     temporal = datos()
     dato_ultimo = temporal[-1]
