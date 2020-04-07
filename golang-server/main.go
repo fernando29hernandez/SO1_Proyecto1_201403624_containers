@@ -22,16 +22,6 @@ func mem(response http.ResponseWriter, request *http.Request) {
 
 	http.ServeFile(response, request, "memoria.html")
 }
-var myClient = &http.Client{Timeout: 10 * time.Second}
-func getJson(url string, target interface{}) error {
-    r, err := myClient.Get(url)
-    if err != nil {
-        return err
-    }
-    defer r.Body.Close()
-
-    return json.NewDecoder(r.Body).Decode(target)
-}
 func insertardato(w http.ResponseWriter, r *http.Request){
     client := redis.NewClient(&redis.Options{
         Addr: "redis:6379",
@@ -57,14 +47,14 @@ func insertardato(w http.ResponseWriter, r *http.Request){
 		t.Year(), t.Month(), t.Day(),
 		t.Hour(), t.Minute(), t.Second())
 
-	fmt.Println("La fecha actual es =>", fecha)
+    fmt.Println("La fecha actual es =>", fecha)
     var data map[string]interface{}
     err1 := json.Unmarshal([]byte(bodyString), &data)
     if err1 != nil {
         panic(err1)
     }
     fmt.Println(data["Porcentaje"])
-    err = client.Set(fecha,data["Porcentaje"], 0).Err()
+    err = client.Set(fecha,data["Porcentaje"],0).Err()
     val, err := client.Get(fecha).Result()
     if err != nil {
         fmt.Println(err)

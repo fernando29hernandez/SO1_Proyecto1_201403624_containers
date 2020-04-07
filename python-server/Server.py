@@ -6,10 +6,10 @@ from typing import List, Dict  # import del manejo de listas
 from flask import Flask  # import para el funcionamiento general de flask
 import json  # import para el manejo de variables tipo json
 from flask import render_template ## Import encargado de renderizar las templates 
-from flask_cors import CORS
-
+from flask_cors import CORS, cross_origin
+from flask import jsonify
 app = Flask(__name__)  # creacion de la app en python de flask
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 # step 2: define our connection information for Redis
 # Replaces with your configuration information
 redis_host = "redis"
@@ -29,7 +29,7 @@ def datos():
         type = r.type(key)
         if type == "string":
             val = r.get(key)
-            valores.append(val)
+            valores.insert(0,val)
         if type == "hash":
             vals = r.hgetall(key)
         if type == "zset":
@@ -41,15 +41,18 @@ def datos():
     return valores
 # FUNCION de tipo get para mostrar los datos de la BD
 @app.route('/')
+@cross_origin()
 def index():
-    return render_template("index.html", results=datos())
+    return render_template("index.html")
 
 @app.route('/memoria')
-@crossdomain(origin='*',headers=['access-control-allow-origin','Content-Type'])
+@cross_origin()
 def memoria():
     temporal = datos()
-    dato_ultimo = temporal[-1]
-    response = {'memoria': dato_ultimo}
+    dato_ultimo = temporal[0]
+    dato_pen = temporal [1]
+    print(dato_ultimo)
+    response = {'memoria1': dato_ultimo,'memoria2':dato_pen}
     return jsonify(response)
 
 if __name__ == '__main__':

@@ -9,9 +9,10 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
 
-        var intervalo = 5; //Tiempo en segundos de cada cuanto se van a refrescar los datos
+        var intervalo = 4; //Tiempo en segundos de cada cuanto se van a refrescar los datos
         var contador = 0;
         let valor_a_enviar_memoria = 0;
+        let valor_a_enviar_memoria_2=0;
         google.charts.load("current", {
             callback: function () {
 
@@ -20,16 +21,17 @@
 
                 function drawChart() {
                     $.ajax({
-                        url: "http://localhost:5000/memoria",
+                        url: "http://35.231.22.175:5000/memoria",
                         type: "get",
                         success: function (json) {
 
-                            valor_a_enviar_memoria = json['memoria'];
-
+                            valor_a_enviar_memoria = json['memoria1'];
+                            valor_a_enviar_memoria_2=json['memoria2'];
+			    console.log(valor_a_enviar_memoria);
                             var data = google.visualization.arrayToDataTable([
-                                ["Medida", "Porcentaje %", { role: "style" }],
-                                ["Memoria",valor_a_enviar_memoria , "#b87333"],
-                                ["CPU", 0, "silver"],
+                                ["Medida", "Porcentaje % Anterior","Pocentaje % actual", { role: "style" }],
+                                ["Memoria",parseInt(valor_a_enviar_memoria_2) ,parseInt(valor_a_enviar_memoria), "#b87333"],
+                                ["CPU", 0,0, "silver"],
                             ]);
                             var view = new google.visualization.DataView(data);
                             view.setColumns([0, 1,
@@ -49,14 +51,19 @@
                                 legend: { position: "none" },
                             };
                             var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-                            chart.draw(view, options);
+                            chart.draw(data, google.charts.Bar.convertOptions(options));
 
-                        }
+
+                        },
+xhrFields: {
+       withCredentials: true
+    },
+    crossDomain: true
                     });
                 }
 
             },
-            packages: ["corechart"]
+            packages: ["corechart","bar"]
         });
 
     </script>
