@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"net/http"
-"github.com/gorilla/mux"
+    "github.com/gorilla/mux"
 	"github.com/go-redis/redis"
-"time"
-"encoding/json"
- "io/ioutil"
- "log"
+    "time"
+    "encoding/json"
+    "io/ioutil"
+    "log"
 )
 type test_struct struct {
 	Test string
@@ -33,18 +33,15 @@ func getJson(url string, target interface{}) error {
     return json.NewDecoder(r.Body).Decode(target)
 }
 func insertardato(w http.ResponseWriter, r *http.Request){
-
-
-client := redis.NewClient(&redis.Options{
-		Addr: "redis:6379",
-		Password: "",
-		DB: 0,
-  })
-resp, err := http.Get("http://34.73.214.43/datosmemoria")
+    client := redis.NewClient(&redis.Options{
+        Addr: "redis:6379",
+        Password: "",
+        DB: 0,
+    })
+    resp, err := http.Get("http://34.73.214.43/datosmemoria")
     if err != nil {
         log.Fatalln(err)
     }
-
     defer resp.Body.Close()
     bodyBytes, _ := ioutil.ReadAll(resp.Body)
 
@@ -61,24 +58,25 @@ resp, err := http.Get("http://34.73.214.43/datosmemoria")
 		t.Hour(), t.Minute(), t.Second())
 
 	fmt.Println("La fecha actual es =>", fecha)
-var data map[string]interface{}
+    var data map[string]interface{}
     err1 := json.Unmarshal([]byte(bodyString), &data)
     if err1 != nil {
         panic(err1)
     }
     fmt.Println(data["Porcentaje"])
-err = client.Set(fecha,data["Porcentaje"], 0).Err()
-val, err := client.Get(fecha).Result()
+    err = client.Set(fecha,data["Porcentaje"], 0).Err()
+    val, err := client.Get(fecha).Result()
     if err != nil {
         fmt.Println(err)
     }
-    fmt.Println("el valor obtenido es : ",val)}
+    fmt.Println("el valor obtenido es : ",val)
+}
 var router = mux.NewRouter()
 
 func main() {
-router.HandleFunc("/datos", insertardato).Methods("POST")
+    router.HandleFunc("/datos", insertardato).Methods("POST")
     http.HandleFunc("/mem",mem)
-   http.Handle("/", router)
+    http.Handle("/", router)
 	fmt.Println("Servidor corriendo en http://localhost:8081/")
 	http.ListenAndServe(":80", nil)
 }

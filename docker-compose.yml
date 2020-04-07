@@ -1,7 +1,7 @@
 version: "2"
 
 services:
-  app:
+  app-golang:
     build: golang-server/.
     ports:
       - "80:80"
@@ -9,6 +9,13 @@ services:
       - redis
     environment:
       REDIS_URL: redis:6379
-
+  app-python:
+    build: python-server/.
+    links:
+      - redis
+    ports:
+      - "5000:5000"
+    environment:
+      REDIS_URL: redis:6379
   redis:
     image: redis:alpine
