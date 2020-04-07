@@ -19,28 +19,25 @@ def datos() -> List[Dict]:
     """Example Hello Redis Program"""
    
     # step 3: create the Redis Connection object
-    try:
-   
-        # The decode_repsonses flag here directs the client to convert the responses from Redis into Python strings
-        # using the default encoding utf-8.  This is client specific.
-        r = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True,db=0)
-        valores = []
-        keys = redis.keys('*')
-        for key in keys:
-            type = redis.type(key)
-            if type == "string":
-                val = redis.get(key)
-                valores.append(val)
-            if type == "hash":
-                vals = redis.hgetall(key)
-            if type == "zset":
-                vals = redis.zrange(key, 0, -1)
-            if type == "list":
-                vals = redis.lrange(key, 0, -1)
-            if type == "set":
-                vals = redis. smembers(key)
-        return valores
-
+    # The decode_repsonses flag here directs the client to convert the responses from Redis into Python strings
+    # using the default encoding utf-8.  This is client specific.
+    r = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True,db=0)
+    valores = []
+    keys = redis.keys('*')
+    for key in keys:
+        type = redis.type(key)
+        if type == "string":
+            val = redis.get(key)
+            valores.append(val)
+        if type == "hash":
+            vals = redis.hgetall(key)
+        if type == "zset":
+            vals = redis.zrange(key, 0, -1)
+        if type == "list":
+            vals = redis.lrange(key, 0, -1)
+        if type == "set":
+            vals = redis. smembers(key)
+    return valores
 # FUNCION de tipo get para mostrar los datos de la BD
 @app.route('/')
 def index():
