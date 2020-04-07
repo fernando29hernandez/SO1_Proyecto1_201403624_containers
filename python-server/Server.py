@@ -6,8 +6,10 @@ from typing import List, Dict  # import del manejo de listas
 from flask import Flask  # import para el funcionamiento general de flask
 import json  # import para el manejo de variables tipo json
 from flask import render_template ## Import encargado de renderizar las templates 
+from flask_cors import CORS
 
 app = Flask(__name__)  # creacion de la app en python de flask
+CORS(app)
 # step 2: define our connection information for Redis
 # Replaces with your configuration information
 redis_host = "redis"
