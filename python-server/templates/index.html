@@ -1,57 +1,76 @@
-<!DOCTYPE html>
 <html>
-<!-- CONFIGURACION DE ESTILOS PARA INDEX-->
 
 <head>
-    <style>
-        #customers {
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
 
-        #customers td,
-        #customers th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-        #customers tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
 
-        #customers tr:hover {
-            background-color: #ddd;
-        }
+        var intervalo = 5; //Tiempo en segundos de cada cuanto se van a refrescar los datos
+        var contador = 0;
+        let valor_a_enviar_memoria = 0;
+        google.charts.load("current", {
+            callback: function () {
 
-        #customers th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #4CAF50;
-            color: white;
-        }
-    </style>
+                drawChart();
+                setInterval(drawChart, intervalo * 1000);
+
+                function drawChart() {
+                    $.ajax({
+                        url: "http://0.0.0.0:5000/memoria",
+                        type: "get",
+                        success: function (json) {
+
+                            valor_a_enviar_memoria = json['memoria'];
+
+                            var data = google.visualization.arrayToDataTable([
+                                ["Medida", "Porcentaje %", { role: "style" }],
+                                ["Memoria",valor_a_enviar_memoria , "#b87333"],
+                                ["CPU", 0, "silver"],
+                            ]);
+                            var view = new google.visualization.DataView(data);
+                            view.setColumns([0, 1,
+                                {
+                                    calc: "stringify",
+                                    sourceColumn: 1,
+                                    type: "string",
+                                    role: "annotation"
+                                },
+                                2]);
+
+                            var options = {
+                                title: "Uso de memoria RAM y CPU",
+                                width: 600,
+                                height: 400,
+                                bar: { groupWidth: "95%" },
+                                legend: { position: "none" },
+                            };
+                            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+                            chart.draw(view, options);
+
+                        }
+                    });
+                }
+
+            },
+            packages: ["corechart"]
+        });
+
+    </script>
 </head>
 
 <body>
-    <!--   AUTOR DEL HTML -->
-    <h1>Fernando Antonio Hernandez Gramajo - 201403624</h1>
-    <!-- TABLA DONDE SE MOSTRARAN LOS ESTUDIANTES-->
-    <table id="customers">
-        <tr>
-            <th>Carne|Nombre</th>
-            
-        </tr>
-        {% for estudiante in results %}
-        <tr>
-            <td>{{ estudiante }}</td>
-            
-        </tr>
-        {% endfor %}
-
-    </table>
-
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Proyecto 1 Servidor Dokerizado Python</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
 </body>
 
 </html>

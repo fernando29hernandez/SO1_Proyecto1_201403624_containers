@@ -44,7 +44,10 @@ def index():
 
 @app.route('/memoria')
 def memoria():
-    return datos()
+    temporal = datos()
+    dato_ultimo = temporal[-1]
+    response = {'memoria': dato_ultimo}
+    return jsonify(response)
 
 if __name__ == '__main__':
     # comando para configurar la ip del servicio
