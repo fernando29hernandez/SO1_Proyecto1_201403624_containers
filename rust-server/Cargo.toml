@@ -1,14 +1,15 @@
 [package]
-name = "hello-world-distroless"
-version = "0.1.0"
-authors = ["Antonio Hernandez  <hernandezfernando18982012@gmail.com>"]
-
+name = "server-rust"
+version = "0.0.0"
+publish = false
 
 [dependencies]
-rocket = "*"
+rocket = { path = "core/lib" }
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
 
 [dependencies.rocket_contrib]
-version = "*"
+path = "contrib/lib"
 default-features = false
-features = ["handlebars_templates", "tera_templates"]
-
+features = ["tera_templates"]
