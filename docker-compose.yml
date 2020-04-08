@@ -17,5 +17,13 @@ services:
       - "5000:5000"
     environment:
       REDIS_URL: redis:6379
+  app-rust:
+    build: rust-server/.
+    links:
+      - redis
+    ports:
+      - "3000:3000"
+    environment:
+      REDIS_URL: redis:6379
   redis:
     image: redis:alpine

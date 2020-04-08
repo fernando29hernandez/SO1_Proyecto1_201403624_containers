@@ -1,0 +1,14 @@
+[package]
+name = "hello-world-distroless"
+version = "0.1.0"
+authors = ["Antonio Hernandez  <hernandezfernando18982012@gmail.com>"]
+
+
+[dependencies]
+rocket = "*"
+
+[dependencies.rocket_contrib]
+version = "*"
+default-features = false
+features = ["handlebars_templates", "tera_templates"]
+
