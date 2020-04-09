@@ -22,7 +22,7 @@ services:
     links:
       - redis
     ports:
-      - "3000:3000"
+      - "8000:8000"
     environment:
       REDIS_URL: redis:6379
   redis:
