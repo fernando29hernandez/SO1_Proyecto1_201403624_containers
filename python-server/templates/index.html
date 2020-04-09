@@ -12,9 +12,9 @@
         var intervalo = 4; //Tiempo en segundos de cada cuanto se van a refrescar los datos
         var contador = 0;
         let valor_a_enviar_memoria = 0;
-        let valor_a_enviar_memoria_2=0;
-let valor_a_enviar_cpu = 0;
-        let valor_a_enviar_cpu_2=0;
+        let valor_a_enviar_memoria_2 = 0;
+        let valor_a_enviar_cpu = 0;
+        let valor_a_enviar_cpu_2 = 0;
         google.charts.load("current", {
             callback: function () {
 
@@ -28,15 +28,14 @@ let valor_a_enviar_cpu = 0;
                         success: function (json) {
 
                             valor_a_enviar_memoria = json['memoria1'];
-                            valor_a_enviar_memoria_2=json['memoria2'];
-valor_a_enviar_cpu = json['cpu1'];
-                            valor_a_enviar_cpu_2=json['cpu2'];
-			    console.log(valor_a_enviar_memoria);
-		            console.log(valor_a_enviar_cpu);
+                            valor_a_enviar_memoria_2 = json['memoria2'];
+                            valor_a_enviar_cpu = json['cpu1'];
+                            valor_a_enviar_cpu_2 = json['cpu2'];
+                            console.log(valor_a_enviar_memoria);
+                            console.log(valor_a_enviar_cpu);
                             var data = google.visualization.arrayToDataTable([
-                                ["Medida", "Porcentaje % Anterior","Pocentaje % actual", { role: "style" }],
-                                ["Memoria",parseInt(valor_a_enviar_memoria_2) ,parseInt(valor_a_enviar_memoria), "#b87333"],
-                                ["CPU",parseInt(valor_a_enviar_cpu_2) ,parseInt(valor_a_enviar_cpu), "silver"],
+                                ["Medida", "Porcentaje % Anterior", "Pocentaje % actual", { role: "style" }],
+                                ["Memoria", parseInt(valor_a_enviar_memoria_2), parseInt(valor_a_enviar_memoria), "#b87333"],
                             ]);
                             var view = new google.visualization.DataView(data);
                             view.setColumns([0, 1,
@@ -60,15 +59,79 @@ valor_a_enviar_cpu = json['cpu1'];
 
 
                         },
-xhrFields: {
-       withCredentials: true
-    },
-    crossDomain: true
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        crossDomain: true
                     });
                 }
 
             },
-            packages: ["corechart","bar"]
+            packages: ["corechart", "bar"]
+        });
+
+    </script>
+    <script type="text/javascript">
+
+        var intervalo = 4; //Tiempo en segundos de cada cuanto se van a refrescar los datos
+        var contador = 0;
+        let valor_a_enviar_memoria = 0;
+        let valor_a_enviar_memoria_2 = 0;
+        let valor_a_enviar_cpu = 0;
+        let valor_a_enviar_cpu_2 = 0;
+        google.charts.load("current", {
+            callback: function () {
+
+                drawChart();
+                setInterval(drawChart, intervalo * 1000);
+
+                function drawChart() {
+                    $.ajax({
+                        url: "http://35.231.22.175:5000/memoria",
+                        type: "get",
+                        success: function (json) {
+
+                            valor_a_enviar_memoria = json['memoria1'];
+                            valor_a_enviar_memoria_2 = json['memoria2'];
+                            valor_a_enviar_cpu = json['cpu1'];
+                            valor_a_enviar_cpu_2 = json['cpu2'];
+                            //console.log(valor_a_enviar_memoria);
+                            //console.log(valor_a_enviar_cpu);
+                            var data = google.visualization.arrayToDataTable([
+                                ["Medida", "Porcentaje % Anterior", "Pocentaje % actual", { role: "style" }],
+                                ["CPU", parseInt(valor_a_enviar_cpu_2), parseInt(valor_a_enviar_cpu), "silver"],
+                            ]);
+                            var view = new google.visualization.DataView(data);
+                            view.setColumns([0, 1,
+                                {
+                                    calc: "stringify",
+                                    sourceColumn: 1,
+                                    type: "string",
+                                    role: "annotation"
+                                },
+                                2]);
+
+                            var options = {
+                                title: "Uso de CPU",
+                                width: 600,
+                                height: 400,
+                                bar: { groupWidth: "95%" },
+                                legend: { position: "none" },
+                            };
+                            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values1"));
+                            chart.draw(data, google.charts.Bar.convertOptions(options));
+
+
+                        },
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        crossDomain: true
+                    });
+                }
+
+            },
+            packages: ["corechart", "bar"]
         });
 
     </script>
@@ -83,6 +146,7 @@ xhrFields: {
         </button>
     </nav>
     <div id="columnchart_values" style="width: 900px; height: 300px;"></div>
+    <div id="columnchart_values1" style="width: 900px; height: 300px;"></div>
 
 </body>
 
