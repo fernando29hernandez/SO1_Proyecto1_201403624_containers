@@ -17,7 +17,7 @@ struct TemplateContext {
     name: String,
     items: Vec<&'static str>
 }
-struct envio
+struct Envio
 {
     indice : String,
     dato : String
@@ -34,20 +34,14 @@ fn get(name: String) -> Template {
     Template::render("index", &context)
 }
 #[get("/insertar/<indice>/<dato>")]
-fn insertar(indice: String,dato: String)->String{
+fn insertar(indice: String,dato: String){
     //let context = TemplateContext { name, items: vec!["One", "Two", "Three"] };
     //Template::render("index", &context)
-    let envio_datos = envio{indice,dato};
+    let envio_datos = Envio{indice,dato};
     let client = redis::Client::open("redis://redis:6379/1").unwrap();
 
     // set key = “Hello World”
     let _: () = client.set(envio_datos.indice,envio_datos.dato).unwrap();
-
-    // get key
-    let key : String = client.get(envio_datos.indice).unwrap();
-
-    println!("key: {}", key);
-
 }
 
 #[catch(404)]

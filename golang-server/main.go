@@ -60,6 +60,25 @@ func insertardato(w http.ResponseWriter, r *http.Request){
         fmt.Println(err)
     }
     fmt.Println("el valor obtenido es : ",val)
+client1 := redis.NewClient(&redis.Options{
+        Addr: "redis:6379",
+        Password: "",
+        DB: 1,
+    })
+    respo, erro := http.Get("http://34.73.214.43/datoscpu")
+    if erro != nil {
+        log.Fatalln(erro)
+    }
+    defer respo.Body.Close()
+    bodyByteso, _ := ioutil.ReadAll(respo.Body)
+bodyStringo := string(bodyByteso)
+    var datao map[string]interface{}
+    err1o := json.Unmarshal([]byte(bodyStringo), &datao)
+    if err1o != nil {
+        panic(err1o)
+    }
+    err = client1.Set(fecha,datao["Porcentaje"],0).Err()
+    
 }
 var router = mux.NewRouter()
 

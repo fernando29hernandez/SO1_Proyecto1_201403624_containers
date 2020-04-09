@@ -13,6 +13,8 @@
         var contador = 0;
         let valor_a_enviar_memoria = 0;
         let valor_a_enviar_memoria_2=0;
+let valor_a_enviar_cpu = 0;
+        let valor_a_enviar_cpu_2=0;
         google.charts.load("current", {
             callback: function () {
 
@@ -27,11 +29,14 @@
 
                             valor_a_enviar_memoria = json['memoria1'];
                             valor_a_enviar_memoria_2=json['memoria2'];
+valor_a_enviar_cpu = json['cpu1'];
+                            valor_a_enviar_cpu_2=json['cpu2'];
 			    console.log(valor_a_enviar_memoria);
+		            console.log(valor_a_enviar_cpu);
                             var data = google.visualization.arrayToDataTable([
                                 ["Medida", "Porcentaje % Anterior","Pocentaje % actual", { role: "style" }],
                                 ["Memoria",parseInt(valor_a_enviar_memoria_2) ,parseInt(valor_a_enviar_memoria), "#b87333"],
-                                ["CPU", 0,0, "silver"],
+                                ["CPU",parseInt(valor_a_enviar_cpu_2) ,parseInt(valor_a_enviar_cpu), "silver"],
                             ]);
                             var view = new google.visualization.DataView(data);
                             view.setColumns([0, 1,

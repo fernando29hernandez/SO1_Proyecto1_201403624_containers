@@ -73,20 +73,7 @@
             //var data = google.visualization.arrayToDataTable(json);
             var chart = new google.visualization.AreaChart(document.getElementById("chart_div"));
             chart.draw(data, options);
-            $.ajax({
-                type: "get",
-                url: "http://35.231.22.175:8000/insertar/"+getDateTime()+"/"+variable_dato,
-                dataType: "json",
-                success: function (msg) {
-                  if (msg) {
-                    // alert("Somebody" + name + " was added in list !");
-                    // location.reload(true);
-                  } else {
-                    // alert("Cannot add to list !");
-                  }
-                },
-                data: JSON.stringify(sendInfo)
-              });
+            
             }
           });
         }
