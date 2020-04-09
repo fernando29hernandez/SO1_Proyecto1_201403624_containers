@@ -1,6 +1,8 @@
 FROM rust:1.41.0 as build-env
 WORKDIR /app
 ADD . /app
+
+RUN rustup override set nightly
 RUN cargo build --release
 
 FROM gcr.io/distroless/cc

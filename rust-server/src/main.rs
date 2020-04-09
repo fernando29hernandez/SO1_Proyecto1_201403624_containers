@@ -1,30 +1,47 @@
-use std::io;
-use std::net::TcpListener;
+#![feature(proc_macro_hygiene)]
 
-use rust_http_server;
+#[macro_use] extern crate rocket;
+#[macro_use] extern crate serde_derive;
 
-extern crate chrono;
+#[cfg(test)] mod tests;
 
+use std::collections::HashMap;
 
-fn main() -> io::Result<()> {
-    println!("Starting server...");
+use rocket::Request;
+use rocket::response::Redirect;
+use rocket_contrib::templates::Template;
 
-    let listener = TcpListener::bind("0.0.0.0:8000")?;
-    const STATIC_ROOT: &str = "/static_root";
+#[derive(Serialize)]
+struct TemplateContext {
+    name: String,
+    items: Vec<&'static str>
+}
 
-    println!("Server started!");
+#[get("/")]
+fn index() -> Redirect {
+    Redirect::to(uri!(get: name = "Unknown"))
+}
 
-    for stream in listener.incoming() {
-        match stream {
-            Ok(stream) => {
-                match rust_http_server::handle_client(stream, &STATIC_ROOT) {
-                    Err(e) => eprintln!("Error handling client: {}", e),
-                    _ => (),
-                }
-            },
-            Err(e) => eprintln!("Connection failed: {}", e),
-        }
-    }
+#[get("/hello/<name>")]
+fn get(name: String) -> Template {
+    let context = TemplateContext { name, items: vec!["One", "Two", "Three"] };
+    Template::render("index", &context)
+}
 
-    Ok(())
+#[catch(404)]
+fn not_found(req: &Request<'_>) -> Template {
+    let mut map = HashMap::new();
+    map.insert("path", req.uri().path());
+    Template::render("error/404", &map)
+}
+
+fn rocket() -> rocket::Rocket {
+    rocket::ignite()
+        .mount("/", routes![index, get])
+        .attach(Template::fairing())
+        .register(catchers![not_found])
+}
+
+fn main() {
+    rocket().launch();
 }
