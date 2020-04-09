@@ -29,7 +29,7 @@ fn get(name: String) -> Template {
     Template::render("index", &context)
 }
 #[get("/insertar/<indice>/<dato>")]
-fn insertar(indice: String,dato: String){
+fn insertar(indice: String,dato: String)->String{
     //let context = TemplateContext { name, items: vec!["One", "Two", "Three"] };
     //Template::render("index", &context)
     let client = redis::Client::open("redis://redis:6379/1").unwrap();
@@ -53,8 +53,7 @@ fn not_found(req: &Request<'_>) -> Template {
 
 fn rocket() -> rocket::Rocket {
     rocket::ignite()
-        .mount("/", routes![index, get])
-        .mount("/insertar", routes![insertar])
+        .mount("/", routes![index, get,insertar])
         .attach(Template::fairing())
         .register(catchers![not_found])
 }
