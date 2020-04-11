@@ -22,8 +22,8 @@ func mem(response http.ResponseWriter, request *http.Request) {
 
 	http.ServeFile(response, request, "memoria.html")
 }
-int bandera :=0
-int bandera2 := 0
+var bandera =0
+var bandera2 = 0
 func insertardato(w http.ResponseWriter, r *http.Request){
     client := redis.NewClient(&redis.Options{
         Addr: "redis:6379",
@@ -70,7 +70,7 @@ func insertardato(w http.ResponseWriter, r *http.Request){
         val, err := client.Get("0").Result()
         err = client.Set("0",data["Porcentaje"],0).Err()
         err = client.Set("1",val,0).Err()
-        val, err := client.Get("0").Result()
+        val2, err := client.Get("0").Result()
         if err != nil {
             fmt.Println(err)
         }
@@ -106,7 +106,7 @@ func insertardato(w http.ResponseWriter, r *http.Request){
         val1, err := client1.Get("0").Result()
         err = client1.Set("0",datao["Porcentaje"],0).Err()
         err = client1.Set("1",val1,0).Err()
-        val1, err := client1.Get("0").Result()
+        val3, err := client1.Get("0").Result()
         if err != nil {
             fmt.Println(err)
         }
