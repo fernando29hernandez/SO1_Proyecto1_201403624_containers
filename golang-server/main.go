@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+    "fmt"
+    "net/http"
     "github.com/gorilla/mux"
-	"github.com/go-redis/redis"
+    "github.com/go-redis/redis"
     "time"
     "encoding/json"
     "io/ioutil"
@@ -22,6 +22,8 @@ func mem(response http.ResponseWriter, request *http.Request) {
 
 	http.ServeFile(response, request, "memoria.html")
 }
+int bandera :=0
+int bandera2 := 0
 func insertardato(w http.ResponseWriter, r *http.Request){
     client := redis.NewClient(&redis.Options{
         Addr: "redis:6379",
@@ -54,13 +56,27 @@ func insertardato(w http.ResponseWriter, r *http.Request){
         panic(err1)
     }
     fmt.Println(data["Porcentaje"])
-    err = client.Set(fecha,data["Porcentaje"],0).Err()
-    val, err := client.Get(fecha).Result()
-    if err != nil {
-        fmt.Println(err)
+    if bandera==0{
+        err = client.Set("0",data["Porcentaje"],0).Err()
+        err = client.Set("1",data["Porcentaje"],0).Err()
+        val, err := client.Get("0").Result()
+        if err != nil {
+            fmt.Println(err)
+        }
+        fmt.Println("el valor obtenido es : ",val)
+        bandera := 1
+    }else
+    {
+        val, err := client.Get("0").Result()
+        err = client.Set("0",data["Porcentaje"],0).Err()
+        err = client.Set("1",val,0).Err()
+        val, err := client.Get("0").Result()
+        if err != nil {
+            fmt.Println(err)
+        }
+        fmt.Println("el valor obtenido es : ",val)
     }
-    fmt.Println("el valor obtenido es : ",val)
-client1 := redis.NewClient(&redis.Options{
+    client1 := redis.NewClient(&redis.Options{
         Addr: "redis:6379",
         Password: "",
         DB: 1,
@@ -71,14 +87,30 @@ client1 := redis.NewClient(&redis.Options{
     }
     defer respo.Body.Close()
     bodyByteso, _ := ioutil.ReadAll(respo.Body)
-bodyStringo := string(bodyByteso)
+    bodyStringo := string(bodyByteso)
     var datao map[string]interface{}
     err1o := json.Unmarshal([]byte(bodyStringo), &datao)
     if err1o != nil {
         panic(err1o)
     }
-    err = client1.Set(fecha,datao["Porcentaje"],0).Err()
-    
+    if bandera1==0{
+        err = client1.Set("0",datao["Porcentaje"],0).Err()
+        err = client1.Set("1",datao["Porcentaje"],0).Err()
+        val, err := client1.Get("0").Result()
+        if err != nil {
+            fmt.Println(err)
+        }
+        bandera1 := 1
+    }else
+    {
+        val1, err := client1.Get("0").Result()
+        err = client1.Set("0",datao["Porcentaje"],0).Err()
+        err = client1.Set("1",val1,0).Err()
+        val1, err := client1.Get("0").Result()
+        if err != nil {
+            fmt.Println(err)
+        }
+    }
 }
 var router = mux.NewRouter()
 

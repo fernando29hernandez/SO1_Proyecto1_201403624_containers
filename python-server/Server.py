@@ -27,7 +27,7 @@ def datos1():
         type = r.type(key)
         if type == "string":
             val = r.get(key)
-            valores.insert(0,val)
+            valores.append(val)
         if type == "hash":
             vals = r.hgetall(key)
         if type == "zset":
@@ -50,7 +50,7 @@ def datos():
         type = r.type(key)
         if type == "string":
             val = r.get(key)
-            valores.insert(0,val)
+            valores.append(val)
         if type == "hash":
             vals = r.hgetall(key)
         if type == "zset":
