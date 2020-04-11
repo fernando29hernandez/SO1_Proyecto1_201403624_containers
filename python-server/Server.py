@@ -23,8 +23,7 @@ def datos1():
     # using the default encoding utf-8.  This is client specific.
     r = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True,db=1)
     valores = []
-    keys = r.keys('*')
-    for key in keys:
+    for key in  r.scan_iter():
         type = r.type(key)
         if type == "string":
             val = r.get(key)
@@ -47,8 +46,7 @@ def datos():
     # using the default encoding utf-8.  This is client specific.
     r = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True,db=0)
     valores = []
-    keys = r.keys('*')
-    for key in keys:
+    for key in r.scan_iter():
         type = r.type(key)
         if type == "string":
             val = r.get(key)
