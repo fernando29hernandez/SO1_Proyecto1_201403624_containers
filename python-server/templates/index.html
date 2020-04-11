@@ -9,7 +9,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
 
-        var intervalo = 4; //Tiempo en segundos de cada cuanto se van a refrescar los datos
+        var intervalo = 5; //Tiempo en segundos de cada cuanto se van a refrescar los datos
         var contador = 0;
         let valor_a_enviar_memoria = 0;
         let valor_a_enviar_memoria_2 = 0;
@@ -31,11 +31,13 @@
                             valor_a_enviar_memoria_2 = json['memoria2'];
                             valor_a_enviar_cpu = json['cpu1'];
                             valor_a_enviar_cpu_2 = json['cpu2'];
-                            console.log(valor_a_enviar_memoria);
-                            console.log(valor_a_enviar_cpu);
+                            console.log("memoria 1 ",valor_a_enviar_memoria);
+                            console.log("cpu 1 ",valor_a_enviar_cpu);
+                            console.log("memoria 2 ",valor_a_enviar_memoria_2);
+                            console.log("cpu 2 ",valor_a_enviar_cpu_2);
                             var data = google.visualization.arrayToDataTable([
                                 ["Medida", "Porcentaje % Anterior", "Pocentaje % actual", { role: "style" }],
-                                ["Memoria", parseInt(valor_a_enviar_memoria_2), parseInt(valor_a_enviar_memoria), "#b87333"],
+                                ["Memoria", parseFloat(valor_a_enviar_memoria_2), parseFloat(valor_a_enviar_memoria), "#b87333"],
                             ]);
                             var view = new google.visualization.DataView(data);
                             view.setColumns([0, 1,
@@ -48,7 +50,7 @@
                                 2]);
 
                             var options = {
-                                title: "Uso de memoria RAM y CPU",
+                                title: "Uso de memoria RAM",
                                 width: 600,
                                 height: 400,
                                 bar: { groupWidth: "95%" },
@@ -73,12 +75,12 @@
     </script>
     <script type="text/javascript">
 
-        var intervalo = 4; //Tiempo en segundos de cada cuanto se van a refrescar los datos
-        var contador = 0;
-        let valor_a_enviar_memoria = 0;
-        let valor_a_enviar_memoria_2 = 0;
-        let valor_a_enviar_cpu = 0;
-        let valor_a_enviar_cpu_2 = 0;
+        var intervalo1 = 4; //Tiempo en segundos de cada cuanto se van a refrescar los datos
+        var contador1 = 0;
+        let valor_a_enviar_memoria1 = 0;
+        let valor_a_enviar_memoria_21 = 0;
+        let valor_a_enviar_cpu1 = 0;
+        let valor_a_enviar_cpu_21 = 0;
         google.charts.load("current", {
             callback: function () {
 
@@ -91,15 +93,15 @@
                         type: "get",
                         success: function (json) {
 
-                            valor_a_enviar_memoria = json['memoria1'];
-                            valor_a_enviar_memoria_2 = json['memoria2'];
-                            valor_a_enviar_cpu = json['cpu1'];
-                            valor_a_enviar_cpu_2 = json['cpu2'];
+                            valor_a_enviar_memoria1 = json['memoria1'];
+                            valor_a_enviar_memoria_21 = json['memoria2'];
+                            valor_a_enviar_cpu1 = json['cpu1'];
+                            valor_a_enviar_cpu_21 = json['cpu2'];
                             //console.log(valor_a_enviar_memoria);
                             //console.log(valor_a_enviar_cpu);
                             var data = google.visualization.arrayToDataTable([
                                 ["Medida", "Porcentaje % Anterior", "Pocentaje % actual", { role: "style" }],
-                                ["CPU", parseInt(valor_a_enviar_cpu_2), parseInt(valor_a_enviar_cpu), "silver"],
+                                ["CPU", parseFloat(valor_a_enviar_cpu_21), parseFloat(valor_a_enviar_cpu1), "silver"],
                             ]);
                             var view = new google.visualization.DataView(data);
                             view.setColumns([0, 1,
@@ -139,7 +141,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Proyecto 1 Servidor Dokerizado Python</a>
+        <a class="navbar-brand" href="#">Proyecto 1 Servidor Dockerizado Python</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -151,3 +153,4 @@
 </body>
 
 </html>
+

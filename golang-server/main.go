@@ -64,7 +64,7 @@ func insertardato(w http.ResponseWriter, r *http.Request){
             fmt.Println(err)
         }
         fmt.Println("el valor obtenido es : ",val)
-        bandera := 1
+        bandera = 1
     }else
     {
         val, err := client.Get("0").Result()
@@ -74,7 +74,7 @@ func insertardato(w http.ResponseWriter, r *http.Request){
         if err != nil {
             fmt.Println(err)
         }
-        fmt.Println("el valor obtenido es : ",val)
+        fmt.Println("el valor obtenido es : ",val2)
     }
     client1 := redis.NewClient(&redis.Options{
         Addr: "redis:6379",
@@ -93,23 +93,15 @@ func insertardato(w http.ResponseWriter, r *http.Request){
     if err1o != nil {
         panic(err1o)
     }
-    if bandera1==0{
-        err = client1.Set("0",datao["Porcentaje"],0).Err()
-        err = client1.Set("1",datao["Porcentaje"],0).Err()
-        val, err := client1.Get("0").Result()
-        if err != nil {
-            fmt.Println(err)
-        }
-        bandera1 := 1
+    if bandera2==0{
+        _  = client1.Set("0",datao["Porcentaje"],0).Err()
+        _  = client1.Set("1",datao["Porcentaje"],0).Err()
+        bandera2 = 1
     }else
     {
-        val1, err := client1.Get("0").Result()
-        err = client1.Set("0",datao["Porcentaje"],0).Err()
-        err = client1.Set("1",val1,0).Err()
-        val3, err := client1.Get("0").Result()
-        if err != nil {
-            fmt.Println(err)
-        }
+        val1, _ := client1.Get("0").Result()
+        _  = client1.Set("0",datao["Porcentaje"],0).Err()
+        _  = client1.Set("1",val1,0).Err()
     }
 }
 var router = mux.NewRouter()

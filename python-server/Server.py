@@ -22,20 +22,11 @@ def datos1():
     # The decode_repsonses flag here directs the client to convert the responses from Redis into Python strings
     # using the default encoding utf-8.  This is client specific.
     r = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True,db=1)
-    valores = []
-    for key in  r.scan_iter():
-        type = r.type(key)
-        if type == "string":
-            val = r.get(key)
-            valores.append(val)
-        if type == "hash":
-            vals = r.hgetall(key)
-        if type == "zset":
-            vals = r.zrange(key, 0, -1)
-        if type == "list":
-            vals = r.lrange(key, 0, -1)
-        if type == "set":
-            vals = r. smembers(key)
+    valores =  []
+    val = r.get("0")
+    valores.append(val)
+    val = r.get("1")
+    valores.append(val)
     return valores
 
 def datos():
@@ -45,20 +36,11 @@ def datos():
     # The decode_repsonses flag here directs the client to convert the responses from Redis into Python strings
     # using the default encoding utf-8.  This is client specific.
     r = redis.StrictRedis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True,db=0)
-    valores = []
-    for key in r.scan_iter():
-        type = r.type(key)
-        if type == "string":
-            val = r.get(key)
-            valores.append(val)
-        if type == "hash":
-            vals = r.hgetall(key)
-        if type == "zset":
-            vals = r.zrange(key, 0, -1)
-        if type == "list":
-            vals = r.lrange(key, 0, -1)
-        if type == "set":
-            vals = r. smembers(key)
+    valores =  []
+    val = r.get("0")
+    valores.append(val)
+    val = r.get("1")
+    valores.append(val)
     return valores
 # FUNCION de tipo get para mostrar los datos de la BD
 @app.route('/')
